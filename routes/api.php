@@ -1,7 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\V1\TravelController;
-use App\Http\Controllers\Api\V1\TourController;
+use App\{Http\Controllers\Api\V1\TravelController, Http\Controllers\Api\V1\TourController};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +15,5 @@ Route::controller(TravelController::class)->group(function () {
 Route::controller(TourController::class)->group(function () {
     Route::get('/travels/{travel}/tours', 'index')->name('tour.index');
 });
-
 
 Route::prefix('/admin')->group(fn() => require_once __DIR__ . '/./admin.php');
