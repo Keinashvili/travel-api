@@ -8,13 +8,16 @@ class TravelRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     public function rules(): array
     {
         return [
-            //
+            'is_public' => 'boolean',
+            'name' => 'required|unique:travels',
+            'description' => 'required',
+            'number_of_days' => 'required|integer'
         ];
     }
 }
