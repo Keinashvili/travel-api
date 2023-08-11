@@ -16,4 +16,8 @@ Route::controller(TourController::class)->group(function () {
     Route::get('/travels/{travel}/tours', 'index')->name('tour.index');
 });
 
-Route::prefix('/admin')->group(fn() => require_once __DIR__ . '/./admin.php');
+Route::prefix('/admin')
+    ->middleware('auth:sanctum')
+    ->group(fn() => require_once __DIR__ . '/./admin.php');
+
+require_once __DIR__ . '/./auth.php';
