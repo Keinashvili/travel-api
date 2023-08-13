@@ -149,4 +149,65 @@ class ToursListTest extends TestCase
         $response->assertJsonMissing(['id' => $cheapTour->id]);
         $response->assertJsonFragment(['id' => $expensiveTour->id]);
     }
+
+    public function test_tours_list_filters_by_starting_date_correctly(): void
+    {
+        $travel = Travel::factory()->create();
+
+        $laterTour = Tour::factory()->create([
+            'travel_id' => $travel->id,
+            'starting_date' => now()->addDays(2),
+            'ending_date' => now()->addDays(3),
+        ]);
+
+        $earlierTour = Tour::factory()->create([
+            'travel_id' => $travel->id,
+            'starting_date' => now(),
+            'ending_date' => now()->addDays(1),
+        ]);
+
+        $endpoint = '/api/v1/travels/' . $travel->slug . '/tours';
+
+        $response = $this->get($endpoint . '?dateFrom=' . now());
+        $response->assertJsonCount(2, 'data');
+        $response->assertJsonFragment(['id' => $earlierTour->id]);
+        $response->assertJsonFragment(['id' => $laterTour->id]);
+
+        $response = $this->get($endpoint . '?dateFrom=' . now()->addDay());
+        $response->assertJsonCount(1, 'data');
+        $response->assertJsonMissing(['id' => $earlierTour->id]);
+        $response->assertJsonFragment(['id' => $laterTour->id]);
+
+        $response = $this->get($endpoint . '?dateFrom=' . now()->addDays(5));
+        $response->assertJsonCount(0, 'data');
+
+        $response = $this->get($endpoint . '?dateTo=' . now()->addDays(5));
+        $response->assertJsonCount(2, 'data');
+        $response->assertJsonFragment(['id' => $earlierTour->id]);
+        $response->assertJsonFragment(['id' => $laterTour->id]);
+
+        $response = $this->get($endpoint . '?dateTo=' . now()->addDay());
+        $response->assertJsonCount(1, 'data');
+        $response->assertJsonMissing(['id' => $laterTour->id]);
+        $response->assertJsonFragment(['id' => $earlierTour->id]);
+
+        $response = $this->get($endpoint . '?dateTo=' . now()->subDay());
+        $response->assertJsonCount(0, 'data');
+
+        $response = $this->get($endpoint . '?dateFrom=' . now()->addDay() . '&dateTo=' . now()->addDays(5));
+        $response->assertJsonCount(1, 'data');
+        $response->assertJsonMissing(['id' => $earlierTour->id]);
+        $response->assertJsonFragment(['id' => $laterTour->id]);
+    }
+
+    public function test_tour_list_returns_validation_errors(): void
+    {
+        $travel = Travel::factory()->create();
+
+        $response = $this->getJson('/api/v1/travels/' . $travel->slug . '/tours?dateFrom=date');
+        $response->assertStatus(422);
+
+        $response = $this->getJson('/api/v1/travels/' . $travel->slug . '/tours?priceFrom=price');
+        $response->assertStatus(422);
+    }
 }
