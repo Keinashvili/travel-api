@@ -8,14 +8,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RoleMiddleware
 {
-    public function handle(Request $request, Closure $next, string $role): Response
+    public function handle(Request $request, Closure $next, string ...$role): Response
     {
         if (!auth()->check()) {
-            abort(401);
+            abort(401, 'Not aurhenticated');
         }
 
-        if (!auth()->user()->roles()->where('name', $role)->exists()) {
-            abort(403);
+        if (!auth()->user()->roles()->whereIn('name', $role)->exists()) {
+            abort(403, 'User doesn\'t have permission to perfom this action');
         }
 
         return $next($request);
