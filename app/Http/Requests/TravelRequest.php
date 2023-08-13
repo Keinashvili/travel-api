@@ -18,10 +18,10 @@ class TravelRequest extends FormRequest
             'is_public' => 'boolean',
             'name' => [
                 'required',
-                Rule::unique('travels')->ignore($this->travel)
+                Rule::unique('travels')->ignore($this->travel),
             ],
             'description' => 'required',
-            'number_of_days' => 'required|integer'
+            'number_of_days' => 'required|integer',
         ];
     }
 }

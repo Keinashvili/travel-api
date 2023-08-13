@@ -48,7 +48,7 @@ class AdminTravelTest extends TestCase
             'name' => 'Travel name',
             'is_public' => 1,
             'description' => 'Travel description',
-            'number_of_days' => 5
+            'number_of_days' => 5,
         ]);
 
         $response->assertStatus(201);

@@ -10,11 +10,11 @@ class RoleMiddleware
 {
     public function handle(Request $request, Closure $next, string ...$role): Response
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             abort(401, 'Not aurhenticated');
         }
 
-        if (!auth()->user()->roles()->whereIn('name', $role)->exists()) {
+        if (! auth()->user()->roles()->whereIn('name', $role)->exists()) {
             abort(403, 'User doesn\'t have permission to perfom this action');
         }
 

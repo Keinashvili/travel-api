@@ -22,16 +22,16 @@ class EditorTravelTest extends TestCase
 
         $travel = Travel::factory()->create();
 
-        $response = $this->actingAs($user)->patchJson('/api/v1/admin/travel/' . $travel->id . '/update', [
+        $response = $this->actingAs($user)->patchJson('/api/v1/admin/travel/'.$travel->id.'/update', [
             'name' => 'Test Travel',
         ]);
         $response->assertStatus(422);
 
-        $response = $this->actingAs($user)->patchJson('/api/v1/admin/travel/' . $travel->id . '/update', [
+        $response = $this->actingAs($user)->patchJson('/api/v1/admin/travel/'.$travel->id.'/update', [
             'name' => 'Test Travel',
             'is_public' => 1,
             'description' => 'Travel description',
-            'number_of_days' => 5
+            'number_of_days' => 5,
         ]);
 
         $response->assertStatus(200);

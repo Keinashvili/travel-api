@@ -1,6 +1,9 @@
 <?php
 
-use App\Http\Controllers\Api\V1\{Admin, Auth\LoginController, TravelController, TourController};
+use App\Http\Controllers\Api\V1\Admin;
+use App\Http\Controllers\Api\V1\Auth\LoginController;
+use App\Http\Controllers\Api\V1\TourController;
+use App\Http\Controllers\Api\V1\TravelController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
