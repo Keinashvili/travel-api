@@ -1,6 +1,6 @@
 <?php
 
-use App\{Http\Controllers\Api\V1\TravelController, Http\Controllers\Api\V1\TourController};
+use App\Http\Controllers\Api\V1\{ TravelController, TourController};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -9,15 +9,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::controller(TravelController::class)->group(function () {
-    Route::get('/travels', 'index')->name('travel.index');
+    Route::get('/travels', 'index');
 });
 
 Route::controller(TourController::class)->group(function () {
-    Route::get('/travels/{travel}/tours', 'index')->name('tour.index');
+    Route::get('/travels/{travel}/tours', 'index');
 });
 
-Route::prefix('/admin')
-    ->middleware('auth:sanctum')
-    ->group(fn() => require_once __DIR__ . '/./admin.php');
+Route::prefix('admin')
+    ->middleware(['auth:sanctum', 'role:admin'])
+    ->group(base_path('routes/admin.php'));
 
-require_once __DIR__ . '/./auth.php';
+Route::middleware('guest')
+    ->group(base_path('routes/auth.php'));
