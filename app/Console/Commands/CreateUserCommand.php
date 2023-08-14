@@ -35,10 +35,10 @@ class CreateUserCommand extends Command
         $user['email'] = $this->ask('Email of the user');
         $user['password'] = $this->secret('Password of the user');
 
-        $roleName = $this->choice('Role of the user', ['admin', 'editor'], 1);
+        $roleName = $this->choice('Role of the user', ['admin', 'editor', 'client'], 2);
         $role = Role::where('name', $roleName)->first();
 
-        if (! $role) {
+        if (!$role) {
             $this->error('Role not found');
 
             return -1;
@@ -46,7 +46,7 @@ class CreateUserCommand extends Command
 
         $validator = Validator::make($user, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', Password::defaults()],
         ]);
 
@@ -64,7 +64,7 @@ class CreateUserCommand extends Command
             $newUser->roles()->attach($role->id);
         });
 
-        $this->info('User '.$user['email'].' created successfully');
+        $this->info('User ' . $user['email'] . ' created successfully');
 
         return 0;
     }

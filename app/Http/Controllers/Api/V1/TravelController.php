@@ -13,4 +13,9 @@ class TravelController extends Controller
     {
         return TravelResource::collection(Travel::query()->where('is_public', true)->paginate());
     }
+
+    public function show(Travel $travel): TravelResource
+    {
+        return TravelResource::make($travel);
+    }
 }
